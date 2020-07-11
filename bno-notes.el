@@ -54,7 +54,10 @@ Link must be in proper format. That is, enclosed in {{ }}"
   (end-of-line))
 
 (defun bno/moveto (dest)
-  "Move whatever is in the current region to the completed.org file."
+  "Move whatever is in the current region into DEST which can have one of the values specified below.
+
+DEST are places in management where things frequently get moved.
+Valid values are: trash.md, next.md, maybe.md, waiting.md, completed.org"
   (interactive "sMove to(default: completed.org):")
   (when (equal dest 'nil)
     (setq dest "completed.org"))
@@ -70,6 +73,7 @@ Link must be in proper format. That is, enclosed in {{ }}"
   (delete-blank-lines))
 
 (defvar keybindings '(
+                      ("C-c b m" . bno/moveto)
                       ("C-c b n" . bno/new-block)
                       ("C-c b c" . bno/copy-link)
                       ("C-c b p" . bno/paste-link)
@@ -105,6 +109,36 @@ Link must be in proper format. That is, enclosed in {{ }}"
     (when buffer-exists
       (erase-buffer))
     (call-process "node" nil t nil "/home/bruno/emacs-external/bin/bno-search" regex)))
+
+(defun bno/book-index ()
+  "Generate an index of all books that are mentioned."
+  (interactive)
+  (let (contents-buffer-name buffer-exists)
+    (setq contents-buffer-name "*bno-book-index-buffer*")
+    (if (get-buffer contents-buffer-name) (setq buffer-exists t)
+      (setq buffer-exists nil)
+      )
+    (switch-to-buffer contents-buffer-name)
+    (when buffer-exists
+      (erase-buffer)
+      )
+    (call-process "node" nil t nil "/home/bruno/emacs-external/bin/bno-book-index"))
+  )
+
+(defun bno/review (date)
+  "Generate a buffer with the concatenated contents of all notes from DATE, or yesterday by default."
+  (interactive "sDate in the format Y/m/d (yesterday is default):")
+  (let (contents-buffer-name buffer-exists)
+    (setq contents-buffer-name "*bno-review-buffer*")
+    (if (get-buffer contents-buffer-name) (setq buffer-exists t)
+      (setq buffer-exists nil)
+      )
+    (switch-to-buffer contents-buffer-name)
+    (when buffer-exists
+      (erase-buffer)
+      )
+    (call-process "node" nil t nil "/home/bruno/emacs-external/bin/bno-review" date))
+  )
 
 (defun bno/search-goto ()
   "Go to file specified by the current line of the point."
