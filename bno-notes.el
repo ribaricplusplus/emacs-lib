@@ -3,7 +3,7 @@
 (defun bno/write-down ()
   "Open processing to write down a thought, task, or whatever else."
   (interactive)
-  (find-file "/home/bruno/Notebooks/Nonzim/management/processing.md"))
+  (find-file "/home/bruno/Notebooks/Nonzim/management/processing.org"))
 
 (global-set-key (kbd "C-c b w") 'bno/write-down)
 
@@ -148,4 +148,5 @@ Valid values are: trash.md, next.md, maybe.md, waiting.md, completed.org"
     (setq line-contents-cleared (seq-take line-contents (1- (length line-contents))))
     (find-file line-contents-cleared))
   )
+
 (provide 'bno/notes)
